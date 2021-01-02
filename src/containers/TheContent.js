@@ -4,11 +4,10 @@ import {
   Route,
   Switch
 } from 'react-router-dom'
-import { CContainer, CFade } from '@coreui/react'
-
-// routes config
+import { CContainer, CFade } from '@coreui/react'// routes config
 import routes from '../routes'
-  
+const Page404 = React.lazy(() => import('../../src/views/pages/page404/Page404'));
+
 const loading = (
   <div className="pt-3 text-center">
     <div className="sk-spinner sk-spinner-pulse"></div>
@@ -35,7 +34,9 @@ const TheContent = () => {
                   )} />
               )
             })}
-            <Redirect from="/" to="/dashboard" />
+            <Redirect exact="true" from="/" to="/dashboard" />
+            <Route path="*" component={props => <Page404 {...props}/>}/>
+
           </Switch>
         </Suspense>
       </CContainer>

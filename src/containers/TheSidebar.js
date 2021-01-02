@@ -28,7 +28,7 @@ const TheSidebar = () => {
       onShowChange={(val) => dispatch({type: 'set', sidebarShow: val })}
     >
       <CSidebarBrand className="d-md-down-none" to="/">
-      <img src={logo} class="img-fluid" alt="Responsive image"></img>
+      <img src={logo} className="img-fluid" alt="Responsive image"></img>
       </CSidebarBrand>
       <CSidebarNav>
 

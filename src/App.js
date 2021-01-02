@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { HashRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router , Route, Switch, Redirect  } from 'react-router-dom';
 import './scss/style.scss';
 
 const loading = (
@@ -7,7 +7,6 @@ const loading = (
     <div className="sk-spinner sk-spinner-pulse"></div>
   </div>
 )
-
 // Containers
 const TheLayout = React.lazy(() => import('./containers/TheLayout'));
 
@@ -18,22 +17,55 @@ const Page404 = React.lazy(() => import('./views/pages/page404/Page404'));
 const Page500 = React.lazy(() => import('./views/pages/page500/Page500'));
 
 class App extends Component {
+  state = {
+     navigate: false,
+     i:0
+   };
+
+  // onLogoutHandler = () => {
+  //   localStorage.clear();
+  //   this.setState({
+  //     navigate: true,
+  //   });
+  // };
+
 
   render() {
-    return (
-      <HashRouter>
-          <React.Suspense fallback={loading}>
-            <Switch>
-              <Route exact path="/login" name="Login Page" render={props => <Login {...props}/>} />
-              <Route exact path="/register" name="Register Page" render={props => <Register {...props}/>} />
-              <Route exact path="/404" name="Page 404" render={props => <Page404 {...props}/>} />
-              <Route exact path="/500" name="Page 500" render={props => <Page500 {...props}/>} />
-              <Route path="/" name="Home" render={props => <TheLayout {...props}/>} />
-            </Switch>
-          </React.Suspense>
-      </HashRouter>
-    );
+    const login = localStorage.getItem("isLoggedIn");
+
+  return  (
+      <>
+        {login ?
+          (
+             <Router>
+            <React.Suspense fallback={loading}>
+              <Switch>
+              <Route exact path="/login" name="Login Page" component={props => <Login {...props} />} />
+                <Route path="/" name="Home" component={props => <TheLayout {...props} />} />
+
+              </Switch>
+            </React.Suspense>
+            </Router>
+ 
+
+
+          ) : (
+            <Router >
+            <React.Suspense fallback={loading}>
+                <Redirect to="/login" push={true} />
+                <Route exact path="/login" name="Login Page" component={props => <Login {...props} />} />
+            </React.Suspense>
+            </Router>
+          )
+
+        }
+
+</>    );
   }
 }
 
 export default App;
+
+
+
+
