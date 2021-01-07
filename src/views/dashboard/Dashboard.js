@@ -1,4 +1,4 @@
-import React,{ Component,lazy } from 'react'
+import React, { Component, lazy } from 'react'
 import {
   CBadge,
   CButton,
@@ -16,21 +16,16 @@ import CIcon from '@coreui/icons-react'
 
 const WidgetsBrand = lazy(() => import('../widgets/WidgetsBrand.js'))
 
-class  Dashboard  extends Component {
+class Dashboard extends Component {
 
-   constructor(){
+  constructor() {
     super()
-   }
-
-  
-
+  }
   render() {
-  return (
-    
-      <WidgetsBrand withCharts/>
+    return (
 
-     
-  )
-}
+      <WidgetsBrand withCharts />
+    )
+  }
 }
 export default Dashboard
