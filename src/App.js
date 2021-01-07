@@ -47,8 +47,6 @@ class App extends Component {
             </React.Suspense>
             </Router>
  
-
-
           ) : (
             <Router >
             <React.Suspense fallback={loading}>
