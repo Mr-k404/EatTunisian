@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link ,withRouter, Redirect  } from 'react-router-dom'
+import { Link ,withRouter,Redirect  } from 'react-router-dom'
 import axios from "axios";
 import {
   CButton,
@@ -56,7 +56,10 @@ onSignInHandler = () => {
             msg: response.data.message,
             redirect: true,
           }); 
-
+       
+          this.props.history.push({
+            pathname: '/dashboard'
+        });
         }
         if (
           response.data.status === "failed" &&
@@ -93,13 +96,8 @@ onSignInHandler = () => {
 
        if (this.state.redirect) {
         
-         return  <Redirect
-         to={{
-         pathname: "/dashboard",
-         state: { property_id: true }
-       }}
-     />
-       }
+       return <Redirect  to="/dashboard" push={true} />;
+     }
     // //   const login = localStorage.getItem("isLoggedIn");
     // // if (login) {
     // //   return <Redirect to="/dashboard" push={true} />;

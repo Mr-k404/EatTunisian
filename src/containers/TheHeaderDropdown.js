@@ -10,6 +10,7 @@ import {
 import CIcon from '@coreui/icons-react'
 
 const TheHeaderDropdown = () => {
+  const user = JSON.parse(localStorage.getItem("userData"));
   return (
     <CDropdown
       inNav
@@ -32,7 +33,7 @@ const TheHeaderDropdown = () => {
           color="light"
           className="text-center"
         >
-          <strong>Account</strong>
+          <strong>{user.first_name} {user.last_name}</strong>
         </CDropdownItem>
         <CDropdownItem>
           <CIcon name="cil-bell" className="mfe-2" />
@@ -81,8 +82,8 @@ const TheHeaderDropdown = () => {
         </CDropdownItem>
         <CDropdownItem divider />
         <CDropdownItem>
-          <CIcon name="cil-lock-locked" className="mfe-2" />
-          Lock Account
+          <CIcon name="cil-logout" className="mfe-2" />
+          Logout
         </CDropdownItem>
       </CDropdownMenu>
     </CDropdown>
