@@ -8,8 +8,15 @@ import {
   CImg
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
+import {  Redirect  } from 'react-router-dom'
+import avatar from '../img/6.jpg'
+export default function TheHeaderDropdown  ()  {
 
-const TheHeaderDropdown = () => {
+  function onLogoutHandler  () {
+     localStorage.clear();
+     console.log("logout");
+   };
+
   return (
     <CDropdown
       inNav
@@ -19,7 +26,7 @@ const TheHeaderDropdown = () => {
       <CDropdownToggle className="c-header-nav-link" caret={false}>
         <div className="c-avatar">
           <CImg
-            src={'avatars/6.jpg'}
+            src={avatar}
             className="c-avatar-img"
             alt="admin@bootstrapmaster.com"
           />
@@ -80,13 +87,14 @@ const TheHeaderDropdown = () => {
           <CBadge color="primary" className="mfs-auto">42</CBadge>
         </CDropdownItem>
         <CDropdownItem divider />
-        <CDropdownItem>
+        <CDropdownItem
+        onClick={onLogoutHandler}>
           <CIcon name="cil-lock-locked" className="mfe-2" />
-          Lock Account
+          Logout
         </CDropdownItem>
       </CDropdownMenu>
     </CDropdown>
   )
 }
 
-export default TheHeaderDropdown
+ 

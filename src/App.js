@@ -22,41 +22,35 @@ class App extends Component {
      i:0
    };
 
-  // onLogoutHandler = () => {
-  //   localStorage.clear();
-  //   this.setState({
-  //     navigate: true,
-  //   });
-  // };
-
+  
 
   render() {
     const login = localStorage.getItem("isLoggedIn");
 
   return  (
       <>
-        {login ?
-          (
-             <Router>
-            <React.Suspense fallback={loading}>
-              <Switch>
-              <Route exact path="/login" name="Login Page" component={props => <Login {...props} />} />
-                <Route path="/" name="Home" component={props => <TheLayout {...props} />} />
+        <Router>
+          <React.Suspense fallback={loading}>
+            <Switch>
 
-              </Switch>
-            </React.Suspense>
-            </Router>
- 
-          ) : (
-            <Router >
-            <React.Suspense fallback={loading}>
-                <Redirect to="/login" push={true} />
-                <Route exact path="/login" name="Login Page" component={props => <Login {...props} />} />
-            </React.Suspense>
-            </Router>
+              <Route path="/login" name="Login Page" component={props => <Login {...props} />} />
+              <Route path="/" name="Home" component={props => <TheLayout {...props} />} />
+              <Route path="*" name="404" component={props => <Page404 {...props} />} />
+
+            </Switch>
+          </React.Suspense>
+          {login ? (
+
+            <Redirect   to="/" />
+
           )
+            :
+            (
 
-        }
+              <Redirect from="dashboard" to="/login" />
+
+            )}
+            </Router>
 
 </>    );
   }
