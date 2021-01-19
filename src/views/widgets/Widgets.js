@@ -22,8 +22,8 @@ import CIcon from '@coreui/icons-react'
 const Widgets = () => {
   return (
     <>
-      <WidgetsDropdown />
-      <CRow>
+      {/* <WidgetsDropdown /> */}
+      {/* <CRow>
         <CCol xs="12" sm="6" lg="3">
           <CWidgetProgress color="success" header="89.9%" text="Lorem ipsum..." footer="Lorem ipsum dolor sit amet enim."/>
         </CCol>
@@ -129,13 +129,14 @@ const Widgets = () => {
             <CIcon width={24} name="cil-moon" className="mx-5"/>
           </CWidgetIcon>
         </CCol>
-      </CRow>
-      <WidgetsBrand/>
-      <WidgetsBrand withCharts/>
+      </CRow> */}
+      {/* <WidgetsBrand/>
+      <WidgetsBrand withCharts/> */}
+      <br/>
       <CCardGroup className="mb-4">
         <CWidgetProgressIcon
           header="87.500"
-          text="Visitors"
+          text="Clients"
           color="gradient-info"
         >
           <CIcon name="cil-people" height="36"/>
@@ -149,29 +150,29 @@ const Widgets = () => {
         </CWidgetProgressIcon>
         <CWidgetProgressIcon
           header="1238"
-          text="Products sold"
+          text="Recipes"
           color="gradient-warning"
+        >
+          <CIcon name="cil-Dinner" height="36"/>
+        </CWidgetProgressIcon>
+        <CWidgetProgressIcon
+          header="28%"
+          text="Total Ingredient"
         >
           <CIcon name="cil-basket" height="36"/>
         </CWidgetProgressIcon>
         <CWidgetProgressIcon
-          header="28%"
-          text="Returning Visitors"
-        >
-          <CIcon name="cil-chartPie" height="36"/>
-        </CWidgetProgressIcon>
-        <CWidgetProgressIcon
-          header="5:34:11"
-          text="Avg. Time"
+          header="123k"
+          text="Downloads"
           color="gradient-danger"
           progressSlot={
             <CProgress color="danger" size="xs" value={75} animated className="my-3"
           />}
         >
-          <CIcon name="cil-speedometer" height="36"/>
+          <CIcon name="cil-cloud-download" height="36"/>
         </CWidgetProgressIcon>
       </CCardGroup>
-      <CCardGroup className="mb-4">
+      {/* <CCardGroup className="mb-4">
         <CWidgetProgressIcon
           header="87.500"
           text="Visitors"
@@ -268,8 +269,8 @@ const Widgets = () => {
             <CIcon name="cil-speech" height="36"/>
           </CWidgetProgressIcon>
         </CCol>
-      </CRow>
-      <CRow>
+      </CRow> */}
+      {/* <CRow>
         <CCol sm="6" md="2">
           <CWidgetProgressIcon
             header="87.500"
@@ -330,8 +331,8 @@ const Widgets = () => {
             <CIcon name="cil-speech" height="36"/>
           </CWidgetProgressIcon>
         </CCol>
-      </CRow>
-      <CRow>
+      </CRow> */}
+      {/* <CRow>
         <CCol sm="4" lg="2">
           <CWidgetSimple header="title" text="1,123">
             <ChartLineSimple style={{ height: '40px' }} borderColor="danger"/>
@@ -362,7 +363,7 @@ const Widgets = () => {
             <ChartBarSimple style={{ height: '40px' }} backgroundColor="success"/>
           </CWidgetSimple>
         </CCol>
-      </CRow>
+      </CRow> */}
     </>
   )
 }

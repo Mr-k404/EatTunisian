@@ -15,6 +15,7 @@ export default function TheHeaderDropdown  ()  {
   function onLogoutHandler  () {
      localStorage.clear();
      console.log("logout");
+     window.location.reload(false);
    };
 
   return (

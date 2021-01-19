@@ -15,10 +15,13 @@ import {
 import CIcon from '@coreui/icons-react'
 
 const WidgetsBrand = lazy(() => import('../widgets/WidgetsBrand.js'))
+const Widgets = lazy(() => import('../widgets/Widgets'))
+const WidgetsDropdown = lazy(() => import('../widgets/WidgetsDropdown'))
 const Dashboard = () => {
   return (
     <>
-      <WidgetsBrand withCharts/>
+    <WidgetsBrand withCharts/>
+     <Widgets withCharts/>
 
      </>
   )
