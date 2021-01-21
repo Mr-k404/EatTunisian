@@ -50,7 +50,6 @@ class App extends Component {
                 name="Home"
                 component={(props) => <TheLayout {...props} />}
               />
-              <Redirect to="/error" />
             </Switch>
           </React.Suspense>
           {!login ? (
@@ -61,7 +60,6 @@ class App extends Component {
                 component={(props) => <Page404 {...props} />}
               />
               <Redirect from="dashboard" to="/login" />
-              <Redirect to="/error" />
             </>
           ) : null}
         </Router>
