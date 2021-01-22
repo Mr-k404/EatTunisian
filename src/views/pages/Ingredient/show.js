@@ -7,12 +7,8 @@ import {
   CButton,
   CCollapse,
   CAlert,
-  CLink,
 } from "@coreui/react";
 import axios from "axios";
-//import usersData from '../../users/UsersData'
-import myimg from "../../../img/Logo.png";
-
 const fields = [
   { key: "id", _style: { width: "10%" } },
   { key: "name", _style: { width: "40%" } },
@@ -25,54 +21,30 @@ const fields = [
     filter: false,
   },
 ];
-
-const getBadge = (status) => {
-  switch (status) {
-    case "Active":
-      return "success";
-    case "Inactive":
-      return "secondary";
-    case "Pending":
-      return "warning";
-    case "Banned":
-      return "danger";
-    default:
-      return "primary";
-  }
-};
-
 const IngredientList = () => {
   const [details, setDetails] = useState([]);
-  const [usersData, setUsersData] = useState([]);
+  const [ingredientData, setingredientData] = useState([]);
   const [isDeleted, setIsDeleted] = useState(false);
   const [Deletedmsg, setDeletedmsg] = useState();
-  const [visible, setVisible] = useState(2);
+  const [isLoading, setisLoading] = useState(false);
 
   const alert = () => {
     return (
       <div className="mt-3 ml-2 mr-2">
-        <CAlert
-          color="primary"
-          closeButton
-          fade="true"
-          show={visible}
-          onShowChange={setVisible}
-        >
+        <CAlert color="primary" closeButton fade={true} show={3}>
           {Deletedmsg}
         </CAlert>
       </div>
     );
   };
 
-  const onExited = () => {
-    setDeletedmsg(false);
-  };
-
   const DeletHandler = (id) => {
+    setisLoading(true);
     axios
       .post("http://localhost:8000/api/ingredient/delete/" + id, {})
       .then((response) => {
         if (response.data.status === 200) {
+          setisLoading(false);
           setIsDeleted(true);
           setDeletedmsg(response.data.message);
         }
@@ -83,12 +55,12 @@ const IngredientList = () => {
   };
 
   useEffect(() => {
+    console.log(isDeleted + "from us");
     axios
       .get("http://localhost:8000/api/ingredient", {})
       .then((response) => {
         if (response.data.status === 200) {
-          setUsersData(response.data.data);
-          //setDataChanged(true)
+          setingredientData(response.data.data);
         }
       })
       .catch((error) => {
@@ -110,6 +82,7 @@ const IngredientList = () => {
   return (
     <>
       <CCard>
+        {isDeleted ? alert() : null}
         <CCardHeader className="addIng">
           <p className="item1">Ingredient List</p>
           <CButton className="item2" color="primary" shape="pill" size="sm">
@@ -118,10 +91,9 @@ const IngredientList = () => {
             </a>
           </CButton>
         </CCardHeader>
-        {isDeleted ? alert() : null}
         <CCardBody>
           <CDataTable
-            items={usersData}
+            items={ingredientData}
             fields={fields}
             tableFilter
             itemsPerPageSelect
@@ -132,10 +104,11 @@ const IngredientList = () => {
             scopedSlots={{
               image: (item) => (
                 <td>
-                  {/* <CBadge color={getBadge(item.status)}>
-                                            {item.status}
-                                        </CBadge> */}
-                  <img className="img-Thumbnail" src={myimg} alt="Forest" />
+                  <img
+                    className="img-Thumbnail"
+                    src={"http://localhost:8000/images/" + item.img}
+                    alt={item.img}
+                  />
                 </td>
               ),
               show_details: (item, index) => {
@@ -157,7 +130,7 @@ const IngredientList = () => {
               },
               details: (item, index) => {
                 return (
-                  <CCollapse show={details.includes(index)} onExited={onExited}>
+                  <CCollapse show={details.includes(index)}>
                     <CCardBody>
                       <CButton size="sm" color="success">
                         Update
@@ -168,7 +141,15 @@ const IngredientList = () => {
                         className="ml-1"
                         onClick={() => DeletHandler(item.id)}
                       >
-                        Delete
+                        {isLoading ? (
+                          <span
+                            className="spinner-border spinner-border-sm ml-5 "
+                            role="status"
+                            aria-hidden="true"
+                          ></span>
+                        ) : (
+                          <span> Delete </span>
+                        )}
                       </CButton>
                     </CCardBody>
                   </CCollapse>
@@ -178,7 +159,7 @@ const IngredientList = () => {
           />
 
           {/* <CDataTable
-              items={usersData}
+              items={ingredientData}
               fields={fields}
               hover
               striped

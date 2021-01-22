@@ -1,16 +1,6 @@
-import React, { useEffect, useState, createRef, Suspense } from "react";
+import React, { Suspense } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
-import {
-  CCard,
-  CCardBody,
-  CCardHeader,
-  CDataTable,
-  CButton,
-  CCollapse,
-  CAlert,
-  CLink,
-  CFade,
-} from "@coreui/react";
+import { CFade } from "@coreui/react";
 
 const IngredientList = React.lazy(() => import("../Ingredient/show"));
 const IngredientCreat = React.lazy(() => import("../Ingredient/creat"));

@@ -25,46 +25,95 @@ const Creat = () => {
   const [fileName, setFileName] = React.useState("Upload File");
   const [Uplodeimage, setImage] = React.useState();
   const [Uplodename, setName] = React.useState();
+  const [fields, setFields] = React.useState({});
+  const [errors, setErrors] = React.useState({});
+  const [valideName, setvalidName] = React.useState(null);
+  const [valideFile, setvalidFile] = React.useState(null);
+  const [isLoading, setisLoading] = React.useState(false);
 
   const onFormSubmit = (e) => {
     e.preventDefault();
     fileUpload(Uplodeimage);
+    fields["name"] = "";
   };
 
-  const onChangeFile = (e) => {
+  const onChangeFile = (field, e) => {
     let files = e.target.files || e.dataTransfer.files;
+    let formIsValid = true;
     if (!files.length) return;
     //console.log(Uplodeimage);
     createImage(files[0]);
     setFileName(e.target.files[0].name);
+    let fieldlist = fields;
+    fieldlist[field] = e.target.value;
+    setFields(fieldlist);
+
+    if (!fieldlist["file"]) {
+      formIsValid = false;
+      errors["file"] = "The file fild cannot be empty";
+    }
+    if (formIsValid) {
+      setvalidFile("valid");
+    } else {
+      setvalidFile("invalid");
+    }
   };
 
-  const onChangeNamme = (e) => {
+  const onChangeNamme = (field, e) => {
     setName(e.target.value);
+    let fieldlist = fields;
+    let formIsValid = true;
+    fieldlist[field] = e.target.value;
+    setFields(fieldlist);
+
+    if (!fieldlist["name"]) {
+      formIsValid = false;
+      errors["name"] = "The name filed cannot be empty";
+    } else {
+      errors["name"] = "";
+    }
+
+    if (typeof fieldlist["name"] !== "undefined") {
+      if (!fieldlist["name"].match(/^[a-zA-Z]+$/)) {
+        formIsValid = false;
+        errors["name"] = "The name should contain Only letters";
+      } else {
+        errors["name"] = "";
+      }
+    }
+    if (formIsValid) {
+      setvalidName("valid");
+    } else {
+      setvalidName("invalid");
+    }
   };
 
   const createImage = (file) => {
     let reader = new FileReader();
     reader.onload = (e) => {
       setImage(e.target.result);
-      // console.log(e.target.result);
     };
     reader.readAsDataURL(file);
   };
 
   const fileUpload = (image) => {
+    setisLoading(true);
     axios
       .post("http://localhost:8000/api/ingredient/creat", {
         name: Uplodename,
         file: Uplodeimage,
       })
       .then((response) => {
+        setisLoading(false);
+        setName("");
+        setFileName("Upload File");
+        setvalidName(null);
+        setvalidFile(null);
         console.log(response);
       })
       .catch((error) => {
         console.log(error);
       });
-    //console.log(image);
   };
 
   return (
@@ -88,14 +137,17 @@ const Creat = () => {
                             <CInputGroupText>Name</CInputGroupText>
                           </CInputGroupPrepend>
                           <CInput
-                            valid
+                            valid={valideName == "valid" ? true : false}
+                            invalid={valideName == "invalid" ? true : false}
                             id="prependedInput"
                             name="name"
                             size="16"
-                            onChange={(e) => onChangeNamme(e)}
+                            value={Uplodename}
+                            onChange={(e) => onChangeNamme("name", e)}
                             type="text"
                           />
                         </CInputGroup>
+                        <span className="errorTxt">{errors["name"]}</span>
                       </div>
                     </CFormGroup>
                     <CFormGroup>
@@ -104,12 +156,14 @@ const Creat = () => {
                       </CLabel>
                       <CCol xs="12">
                         <CInputFile
-                          invalid
+                          valid={valideFile == "valid" ? true : false}
+                          invalid={valideFile == "invalid" ? true : false}
                           custom
                           size="16"
                           name="file"
-                          onChange={(e) => onChangeFile(e)}
+                          onChange={(e) => onChangeFile("file", e)}
                           id="custom-file-input"
+                          accept=".jpg,.png,.jpeg"
                         />
                         <CLabel
                           htmlFor="custom-file-input"
@@ -118,10 +172,30 @@ const Creat = () => {
                           {fileName}
                         </CLabel>
                       </CCol>
+                      <span className="errorTxt">{errors["file"]}</span>
                     </CFormGroup>
+
                     <div className="form-actions">
-                      <CButton type="submit" color="primary">
-                        Save changes
+                      <CButton
+                        type="submit"
+                        color="primary"
+                        disabled={
+                          valideName == "valid" && valideFile == "valid"
+                            ? false
+                            : valideName == null && valideFile == null
+                            ? true
+                            : true
+                        }
+                      >
+                        {isLoading ? (
+                          <span
+                            className="spinner-border spinner-border-sm ml-5 "
+                            role="status"
+                            aria-hidden="true"
+                          ></span>
+                        ) : (
+                          <span> Save changes </span>
+                        )}
                       </CButton>
                       <CButton className="canceli" color="secondary">
                         Cancel
