@@ -53,7 +53,7 @@ class App extends Component {
           {!login ? (
             <>
               <Route
-                path="error"
+                path="/error"
                 name="404"
                 component={(props) => <Page404 {...props} />}
               />

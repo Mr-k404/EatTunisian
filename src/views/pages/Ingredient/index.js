@@ -4,6 +4,7 @@ import { CFade } from "@coreui/react";
 
 const IngredientList = React.lazy(() => import("../Ingredient/show"));
 const IngredientCreat = React.lazy(() => import("../Ingredient/creat"));
+const IngredientUpdate = React.lazy(() => import("../Ingredient/update"));
 
 const loading = (
   <div className="pt-3 text-center">
@@ -22,6 +23,7 @@ const Ingredient = ({ match }) => {
             render={(props) => (
               <CFade>
                 <IngredientList {...props} />
+                {console.log(props)}
               </CFade>
             )}
           />
@@ -33,7 +35,18 @@ const Ingredient = ({ match }) => {
               </CFade>
             )}
           />
+
+          <Route
+            path={`${match.url}/update`}
+            render={(props) => (
+              <CFade>
+                <IngredientUpdate {...props} />
+              </CFade>
+            )}
+          />
+          <Redirect from="/ingredient/" to="/ingredient/show" />
           <Redirect to="/error" />
+
           {/* <Redirect exact from="/" to="/dashboard" /> */}
         </Switch>
       </Suspense>

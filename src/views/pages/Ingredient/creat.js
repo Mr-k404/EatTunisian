@@ -16,6 +16,7 @@ import {
   CInputGroupText,
   CLabel,
   CRow,
+  CAlert,
 } from "@coreui/react";
 import axios from "axios";
 
@@ -30,6 +31,17 @@ const Creat = () => {
   const [valideName, setvalidName] = React.useState(null);
   const [valideFile, setvalidFile] = React.useState(null);
   const [isLoading, setisLoading] = React.useState(false);
+  const [isCreated, setCreated] = React.useState();
+
+  const alert = () => {
+    return (
+      <div className="mt-3 ml-2 mr-2">
+        <CAlert color="primary" closeButton fade={true} show={5}>
+          {isCreated}
+        </CAlert>
+      </div>
+    );
+  };
 
   const onFormSubmit = (e) => {
     e.preventDefault();
@@ -74,7 +86,7 @@ const Creat = () => {
     }
 
     if (typeof fieldlist["name"] !== "undefined") {
-      if (!fieldlist["name"].match(/^[a-zA-Z]+$/)) {
+      if (!fieldlist["name"].match("^[ A-Za-z]+$")) {
         formIsValid = false;
         errors["name"] = "The name should contain Only letters";
       } else {
@@ -109,7 +121,9 @@ const Creat = () => {
         setFileName("Upload File");
         setvalidName(null);
         setvalidFile(null);
+        setCreated(response.data.message);
         console.log(response);
+        console.log(isCreated);
       })
       .catch((error) => {
         console.log(error);
@@ -122,6 +136,7 @@ const Creat = () => {
         <CCol xs="12">
           <CFade timeout={300} in={showElements} unmountOnExit={true}>
             <CCard>
+              {isCreated ? alert() : null}
               <CCardHeader>Add Ingredient</CCardHeader>
               <CCollapse show={collapsed} timeout={1000}>
                 <CCardBody>

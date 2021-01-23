@@ -1,4 +1,5 @@
-import React, { useEffect, useState, createRef } from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   CCard,
   CCardBody,
@@ -31,7 +32,7 @@ const IngredientList = () => {
   const alert = () => {
     return (
       <div className="mt-3 ml-2 mr-2">
-        <CAlert color="primary" closeButton fade={true} show={3}>
+        <CAlert color="primary" closeButton fade={true} show={5}>
           {Deletedmsg}
         </CAlert>
       </div>
@@ -55,7 +56,6 @@ const IngredientList = () => {
   };
 
   useEffect(() => {
-    console.log(isDeleted + "from us");
     axios
       .get("http://localhost:8000/api/ingredient", {})
       .then((response) => {
@@ -81,8 +81,8 @@ const IngredientList = () => {
 
   return (
     <>
+      {isDeleted ? alert() : null}
       <CCard>
-        {isDeleted ? alert() : null}
         <CCardHeader className="addIng">
           <p className="item1">Ingredient List</p>
           <CButton className="item2" color="primary" shape="pill" size="sm">
@@ -132,9 +132,22 @@ const IngredientList = () => {
                 return (
                   <CCollapse show={details.includes(index)}>
                     <CCardBody>
-                      <CButton size="sm" color="success">
-                        Update
+                      <CButton color="success" size="sm">
+                        <Link
+                          className="text-white px-2"
+                          to={{
+                            pathname: "/ingredient/update",
+                            dataToUpdat: {
+                              id: item.id,
+                              name: item.name,
+                              img: item.img,
+                            },
+                          }}
+                        >
+                          Update
+                        </Link>
                       </CButton>
+
                       <CButton
                         size="sm"
                         color="danger"

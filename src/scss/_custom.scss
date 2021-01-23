@@ -1,8 +1,21 @@
 .img-Thumbnail {
   border: 1px solid #ddd;
   border-radius: 4px;
-  padding: 5px;
+  padding: 3px;
   width: 100px !important;
+  height: 80px !important;
+}
+.updShow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+  width: 300px !important;
+  height: 250px !important;
 }
 .img-Thumbnail:hover {
   box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
