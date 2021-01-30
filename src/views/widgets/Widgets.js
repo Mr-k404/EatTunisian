@@ -1,9 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+
 import { CCardGroup, CWidgetProgressIcon, CProgress } from "@coreui/react";
 
 import CIcon from "@coreui/icons-react";
+import axios from "axios";
 
 const Widgets = () => {
+  const [ingCount, setingCount] = useState();
+  const [respCount, setrespCount] = useState();
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8000/api/dashData", {})
+      .then((response) => {
+        if (response.data.status === 200) {
+          setrespCount(response.data.resp);
+          setingCount(response.data.ing);
+          console.log(response.data.resp);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  });
   return (
     <>
       <br />
@@ -15,6 +34,7 @@ const Widgets = () => {
         >
           <CIcon name="cil-people" height="36" />
         </CWidgetProgressIcon>
+
         <CWidgetProgressIcon
           header="385"
           text="New Clients"
@@ -22,16 +42,24 @@ const Widgets = () => {
         >
           <CIcon name="cil-userFollow" height="36" />
         </CWidgetProgressIcon>
+
         <CWidgetProgressIcon
-          header="1238"
+          header={respCount}
           text="Recipes"
           color="gradient-warning"
+          value={respCount}
         >
           <CIcon name="cil-Dinner" height="36" />
         </CWidgetProgressIcon>
-        <CWidgetProgressIcon header="28%" text="Total Ingredient">
+
+        <CWidgetProgressIcon
+          header={ingCount}
+          text="Total Ingredient"
+          value={ingCount}
+        >
           <CIcon name="cil-basket" height="36" />
         </CWidgetProgressIcon>
+
         <CWidgetProgressIcon
           header="123k"
           text="Downloads"

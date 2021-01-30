@@ -11,9 +11,16 @@ import {
 } from "@coreui/react";
 import axios from "axios";
 const fields = [
-  { key: "id", _style: { width: "10%" } },
-  { key: "name", _style: { width: "40%" } },
-  { key: "image", _style: { width: "40%" } },
+  "id",
+  //"UserID",
+  "name",
+  //"instractions",
+  "category",
+  //"cookTime",
+  //"servings",
+  "rate",
+  "image",
+
   {
     key: "show_details",
     label: "",
@@ -22,10 +29,11 @@ const fields = [
     filter: false,
   },
 ];
-const IngredientList = () => {
+const RecipesList = () => {
   const [details, setDetails] = useState([]);
-  const [ingredientData, setingredientData] = useState([]);
+  const [recipesData, setrecipesData] = useState([]);
   const [isDeleted, setIsDeleted] = useState(false);
+  const [DeletedErr, setDeletedErr] = useState();
   const [Deletedmsg, setDeletedmsg] = useState();
   const [isLoading, setisLoading] = useState(false);
   const [errormsg, seterrormsg] = useState();
@@ -40,10 +48,20 @@ const IngredientList = () => {
     );
   };
 
+  const alertDelEr = () => {
+    return (
+      <div className="mt-3 ml-2 mr-2">
+        <CAlert color="danger" closeButton fade={true} show={5}>
+          Opps!We are not able to delet the Recipes!!
+        </CAlert>
+      </div>
+    );
+  };
+
   const DeletHandler = (id) => {
     setisLoading(true);
     axios
-      .post("http://localhost:8000/api/ingredient/delete/" + id, {})
+      .post("http://localhost:8000/api/recipes/delete/" + id, {})
       .then((response) => {
         if (response.data.status === 200) {
           setisLoading(false);
@@ -52,16 +70,18 @@ const IngredientList = () => {
         }
       })
       .catch((error) => {
+        setisLoading(false);
+        setDeletedErr(error);
         console.log(error);
       });
   };
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/ingredient", {})
+      .get("http://localhost:8000/api/recipes", {})
       .then((response) => {
         if (response.data.status === 200) {
-          setingredientData(response.data.data);
+          setrecipesData(response.data.data);
         }
       })
       .catch((error) => {
@@ -84,25 +104,24 @@ const IngredientList = () => {
   return (
     <>
       {isDeleted ? alert() : null}
+      {DeletedErr ? alertDelEr() : null}
       <CCard>
         <CCardHeader className="addIng">
-          <p className="item1">Ingredient List</p>
+          <p className="item1">Recipes List</p>
           <CButton className="item2" color="primary" shape="pill" size="sm">
-            <a className="text-white px-2" href="/ingredient/creat">
-              Add Ingredient
+            <a className="text-white px-2" href="/recipes/creat">
+              Add Recipes
             </a>
           </CButton>
         </CCardHeader>
         <CCardBody>
           <CDataTable
-            items={ingredientData}
+            items={recipesData}
             fields={fields}
             tableFilter
             itemsPerPageSelect
             itemsPerPage={5}
             hover
-            sorter
-            pagination
             noItemsViewSlot={
               errormsg ? (
                 <CAlert color="danger" closeButton fade={true}>
@@ -110,12 +129,14 @@ const IngredientList = () => {
                 </CAlert>
               ) : null
             }
+            sorter
+            pagination
             scopedSlots={{
               image: (item) => (
                 <td>
                   <img
                     className="img-Thumbnail"
-                    src={"http://localhost:8000/images/" + item.img}
+                    src={"http://localhost:8000/images/" + item.image}
                     alt={item.img}
                   />
                 </td>
@@ -145,7 +166,7 @@ const IngredientList = () => {
                         <Link
                           className="text-white px-2"
                           to={{
-                            pathname: "/ingredient/update",
+                            pathname: "/recipes/update",
                             dataToUpdat: {
                               id: item.id,
                               name: item.name,
@@ -173,37 +194,29 @@ const IngredientList = () => {
                           <span> Delete </span>
                         )}
                       </CButton>
+                      <CButton size="sm" color="primary" className="ml-1">
+                        <Link
+                          className="text-white px-2"
+                          to={{
+                            pathname: "/recipes/show-details",
+                            dataToUpdat: {
+                              id: item.id,
+                            },
+                          }}
+                        >
+                          Show Details
+                        </Link>
+                      </CButton>
                     </CCardBody>
                   </CCollapse>
                 );
               },
             }}
           />
-
-          {/* <CDataTable
-              items={ingredientData}
-              fields={fields}
-              hover
-              striped
-              bordered
-              size="sm"
-              itemsPerPage={10}
-              pagination
-              scopedSlots = {{
-                'servings':
-                  (item)=>(
-                    <td>
-                      <CBadge color={getBadge(item.servings)}>
-                        {item.servings}
-                      </CBadge>
-                    </td>
-                  )
-              }}
-            /> */}
         </CCardBody>
       </CCard>
     </>
   );
 };
 
-export default IngredientList;
+export default RecipesList;

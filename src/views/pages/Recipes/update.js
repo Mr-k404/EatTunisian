@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   CButton,
   CCard,
@@ -17,21 +17,28 @@ import {
   CLabel,
   CRow,
   CAlert,
+  CImg,
 } from "@coreui/react";
 import axios from "axios";
+import { Redirect } from "react-router-dom";
 
-const Creat = () => {
-  const [collapsed, setCollapsed] = React.useState(true);
-  const [showElements, setShowElements] = React.useState(true);
-  const [fileName, setFileName] = React.useState("Upload File");
-  const [Uplodeimage, setImage] = React.useState();
-  const [Uplodename, setName] = React.useState();
-  const [fields, setFields] = React.useState({});
-  const [errors, setErrors] = React.useState({});
-  const [valideName, setvalidName] = React.useState(null);
-  const [valideFile, setvalidFile] = React.useState(null);
-  const [isLoading, setisLoading] = React.useState(false);
-  const [isCreated, setCreated] = React.useState();
+const Creat = (props) => {
+  const [collapsed, setCollapsed] = useState(true);
+  const [showElements, setShowElements] = useState(true);
+  const [fileName, setFileName] = useState(props.location.dataToUpdat.img);
+  const [Uplodeimage, setImage] = useState(props.location.dataToUpdat.img);
+  const [fields, setFields] = useState({});
+  const [errors, setErrors] = useState({});
+  const [valideName, setvalidName] = useState(null);
+  const [valideFile, setvalidFile] = useState(null);
+  const [isLoading, setisLoading] = useState(false);
+  const [isCreated, setCreated] = useState();
+  const [OldName, setOldName] = useState();
+  const [OldFile, setOldFile] = useState();
+  const [Uplodename, setName] = useState(props.location.dataToUpdat.name);
+  const redirect = () => {
+    return <Redirect to="/ingredient/show" />;
+  };
 
   const alert = () => {
     return (
@@ -45,22 +52,26 @@ const Creat = () => {
 
   const onFormSubmit = (e) => {
     e.preventDefault();
-    fileUpload(Uplodeimage);
+    fileUpload();
     fields["name"] = "";
+    console.log("uplimage" + Uplodeimage);
+    console.log(props.location.dataToUpdat.img);
   };
-
   const onChangeFile = (field, e) => {
     let files = e.target.files || e.dataTransfer.files;
+    if (e.target.value) {
+      setImage(e.target.value);
+    } else {
+      setImage(fileName);
+    }
     let formIsValid = true;
-    if (!files.length) return;
+
+    if (!Uplodeimage.length) return;
     //console.log(Uplodeimage);
     createImage(files[0]);
-    setFileName(e.target.files[0].name);
-    let fieldlist = fields;
-    fieldlist[field] = e.target.value;
-    setFields(fieldlist);
+    setFileName(e.target.value);
 
-    if (!fieldlist["file"]) {
+    if (!Uplodeimage) {
       formIsValid = false;
       errors["file"] = "The file fild cannot be empty";
     }
@@ -72,21 +83,13 @@ const Creat = () => {
   };
 
   const onChangeNamme = (field, e) => {
-    setName(e.target.value);
-    let fieldlist = fields;
-    let formIsValid = true;
-    fieldlist[field] = e.target.value;
-    setFields(fieldlist);
-
-    if (!fieldlist["name"]) {
-      formIsValid = false;
-      errors["name"] = "The name filed cannot be empty";
-    } else {
-      errors["name"] = "";
+    if (e.target.value) {
+      setName(e.target.value);
     }
 
-    if (typeof fieldlist["name"] !== "undefined") {
-      if (!fieldlist["name"].match("^[ A-Za-z]+$")) {
+    let formIsValid = true;
+    if (typeof Uplodename !== "undefined") {
+      if (!Uplodename.match("^[ A-Za-z]+$")) {
         formIsValid = false;
         errors["name"] = "The name should contain Only letters";
       } else {
@@ -99,7 +102,6 @@ const Creat = () => {
       setvalidName("invalid");
     }
   };
-
   const createImage = (file) => {
     let reader = new FileReader();
     reader.onload = (e) => {
@@ -108,12 +110,19 @@ const Creat = () => {
     reader.readAsDataURL(file);
   };
 
-  const fileUpload = (image) => {
+  useEffect(() => {
+    setOldName(props.location.dataToUpdat.name);
+    setOldFile(props.location.dataToUpdat.img);
+  });
+
+  const fileUpload = () => {
     setisLoading(true);
     axios
-      .post("http://localhost:8000/api/ingredient/creat", {
+      .post("http://localhost:8000/api/ingredient/update", {
+        id: props.location.dataToUpdat.id,
         name: Uplodename,
         file: Uplodeimage,
+        oldimg: props.location.dataToUpdat.img,
       })
       .then((response) => {
         setisLoading(false);
@@ -122,24 +131,22 @@ const Creat = () => {
         setvalidName(null);
         setvalidFile(null);
         setCreated(response.data.message);
-        console.log(response);
-        console.log(isCreated);
       })
       .catch((error) => {
-        setisLoading(false);
-        errors["frome"] = "Please check your networrk";
         console.log(error);
       });
   };
 
   return (
     <>
+      {isCreated ? redirect() : null}
+
       <CRow>
         <CCol xs="12">
           <CFade timeout={300} in={showElements} unmountOnExit={true}>
             <CCard>
               {isCreated ? alert() : null}
-              <CCardHeader>Add Ingredient</CCardHeader>
+              <CCardHeader>Update Ingredient</CCardHeader>
               <CCollapse show={collapsed} timeout={1000}>
                 <CCardBody>
                   <CForm
@@ -151,7 +158,7 @@ const Creat = () => {
                       <div className="controls">
                         <CInputGroup className="input-prepend">
                           <CInputGroupPrepend>
-                            <CInputGroupText>Name</CInputGroupText>
+                            <CInputGroupText>Old Name</CInputGroupText>
                           </CInputGroupPrepend>
                           <CInput
                             valid={valideName == "valid" ? true : false}
@@ -159,7 +166,7 @@ const Creat = () => {
                             id="prependedInput"
                             name="name"
                             size="16"
-                            value={Uplodename}
+                            placeholder={OldName}
                             onChange={(e) => onChangeNamme("name", e)}
                             type="text"
                           />
@@ -197,9 +204,9 @@ const Creat = () => {
                         type="submit"
                         color="primary"
                         disabled={
-                          valideName == "valid" && valideFile == "valid"
+                          valideName == "valid" || Uplodename == OldName
                             ? false
-                            : valideName == null && valideFile == null
+                            : valideName == null
                             ? true
                             : true
                         }
@@ -218,7 +225,14 @@ const Creat = () => {
                         Cancel
                       </CButton>
                     </div>
-                    <span className="errorTxt">{errors["frome"]}</span>
+                    <CImg
+                      src={
+                        "http://localhost:8000/images/" +
+                        props.location.dataToUpdat.img
+                      }
+                      fluid
+                      className="updShow mb-2"
+                    />
                   </CForm>
                 </CCardBody>
               </CCollapse>
